@@ -12,7 +12,7 @@ def create_model(vocab_size,embedding_size,max_sentence_length,filter_sizes,num_
 	model.add(MaxPooling1D(pool_size=(max_sentence_length - 3 + 1,),strides=1))
 	model.add(Dropout(dropout))
 	model.add(Flatten())
-	model.add(Dense(8,activation='relu'))
+	model.add(Dense(344,activation='relu'))
 	model.add(Activation('softmax'))
 	#model.compile(loss=keras.losses.categorical_crossentropy,optimzer=keras.optimizers.SGD(),metrics=['accuracy'])
 	model.compile(loss='categorical_crossentropy',optimizer='rmsprop',metrics=['accuracy'])

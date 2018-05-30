@@ -15,20 +15,40 @@ from glove_vocab import Glove
 texts=[]
 labels=[]
 
+
+from pymongo import MongoClient
+
+
+
 def read_inputs(folder_name):
 	global texts
 	global labels
-	dirs=os.listdir(folder_name)
-	class_id=0
-	for fn in dirs:
-		print("Processing {}".format(fn))
-		full_path = os.path.join(folder_name,fn)
-		fh=open(full_path)
-		lines=fh.readlines()
-		fh.close()
-		texts = texts+lines
-		[labels.append(class_id) for x in lines]
+	connection = MongoClient("localhost", 27017)
+	db = connection["chatbot"]
+	tr_collection=db.trainingData
+	class_id = 0
+	for document in tr_collection.find():
+		intentId = document['intentId']
+		patterns = document['patterns']
+		texts = texts + patterns
+		for p in patterns:
+			labels.append(class_id)
 		class_id += 1
+
+# def read_inputs(folder_name):
+# 	global texts
+# 	global labels
+# 	dirs=os.listdir(folder_name)
+# 	class_id=0
+# 	for fn in dirs:
+# 		print("Processing {}".format(fn))
+# 		full_path = os.path.join(folder_name,fn)
+# 		fh=open(full_path)
+# 		lines=fh.readlines()
+# 		fh.close()
+# 		texts = texts+lines
+# 		[labels.append(class_id) for x in lines]
+# 		class_id += 1
 
 if __name__ == '__main__':
 	read_inputs('./data')
